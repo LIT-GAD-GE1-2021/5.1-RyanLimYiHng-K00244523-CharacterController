@@ -43,6 +43,8 @@ public class AdventureController : MonoBehaviour
     private float hAxis;
     private Rigidbody2D theRigidBody;
     private Animator theAnimator;
+    private bool attack;
+    private bool attacking;
 
 
     void Start()
@@ -60,6 +62,7 @@ public class AdventureController : MonoBehaviour
     {
 
         jump = Input.GetKeyDown(KeyCode.Space);
+        attack = Input.GetKey (KeyCode.L);
 
         hAxis = Input.GetAxis("Horizontal");
 
@@ -74,8 +77,19 @@ public class AdventureController : MonoBehaviour
         float yVelocity = theRigidBody.velocity.y;
         theAnimator.SetFloat("vspeed", yVelocity);
 
+        if (attack)
+        {
+            attacking = true;
+            theAnimator.SetBool("attack", true);
+        }
+        else
+        {
+            attacking = false;
+            theAnimator.SetBool("attack", false);
+        }
 
-        if (grounded)
+
+        if (grounded && attacking == false)
         {
             if ((hAxis > 0) && (facingRight == false))
             {
@@ -114,13 +128,16 @@ public class AdventureController : MonoBehaviour
 
     private void Flip()
     {
+        if (attacking == false)
+        {
+            facingRight = !facingRight;
 
-        facingRight = !facingRight;
+            Vector3 theScale = transform.localScale;
 
-        Vector3 theScale = transform.localScale;
+            theScale.x *= -1;
+            transform.localScale = theScale;
+        }
 
-        theScale.x *= -1;
-        transform.localScale = theScale;
     }
 
 
