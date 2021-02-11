@@ -43,7 +43,6 @@ public class AdventureController : MonoBehaviour
     private float hAxis;
     private Rigidbody2D theRigidBody;
     private Animator theAnimator;
-    private bool attack;
     private bool attacking;
 
 
@@ -62,7 +61,7 @@ public class AdventureController : MonoBehaviour
     {
 
         jump = Input.GetKeyDown(KeyCode.Space);
-        attack = Input.GetKey (KeyCode.L);
+        attacking = Input.GetKey (KeyCode.L);
 
         hAxis = Input.GetAxis("Horizontal");
 
@@ -77,14 +76,12 @@ public class AdventureController : MonoBehaviour
         float yVelocity = theRigidBody.velocity.y;
         theAnimator.SetFloat("vspeed", yVelocity);
 
-        if (attack)
+        if (attacking)
         {
-            attacking = true;
             theAnimator.SetBool("attack", true);
         }
         else
         {
-            attacking = false;
             theAnimator.SetBool("attack", false);
         }
 
@@ -104,11 +101,12 @@ public class AdventureController : MonoBehaviour
     }
     void FixedUpdate()
     {
-
-        if (grounded && !jump)
+     
+        if (grounded && !jump && attacking == false)
         {
+            theRigidBody.velocity = new Vector2(horizontalSpeed * hAxis, theRigidBody.velocity.y);
         }
-        else if (grounded && jump)
+        else if (grounded && jump && attacking == false)
         {
             theRigidBody.velocity = new Vector2(theRigidBody.velocity.x, jumpSpeed);
         }
